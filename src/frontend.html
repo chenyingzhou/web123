@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="https://mpay-static.oss-cn-hangzhou.aliyuncs.com/html/lib/state-secret/microdone.css">
+  <script type="text/javascript" src="https://mpay-static.oss-cn-hangzhou.aliyuncs.com/html/lib/state-secret/jquery.min.js"></script>
+  <script type="text/javascript" src="https://mpay-static.oss-cn-hangzhou.aliyuncs.com/html/lib/state-secret/microdone-220322.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .ipt_pwd {
+      width: 245px;
+      height: 37px;
+      position: relative;
+      border: 1px solid #333;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="ipt_pwd2" class="ipt_pwd">
+    <span id="LOGPASS2_SHOW">请输入密码</span>
+    <input id="LOGPASS2" class="default input_search" type="password" disabled="disabled"/>
+    <div id="keyboardBtn2" class="ipt_pwd_rjp default"></div>
+  </div>
+</div>
+</body>
+<script>
+  function initPassword(options = {}) {
+    // eslint-disable-next-line
+    const passowrd = new showKeyBord({
+      'png': '//mpay-static.oss-cn-hangzhou.aliyuncs.com/html/lib/state-secret/img', // 图片路径，用这个就行了，也可以下载到本地
+      'click_objId': '#keyboardBtn2', // 触发显示键盘的Dom节点Id
+      'regExp1': '[\\S\\s]', // 输入过程限制的正则，不匹配正则的字符不让输入
+      'regExp2': '^[\\S\\s]{6,12}$', // 输入完成后的正则，与getValid()对应，判断输入值是否匹配该正则
+      'Input_texId': '#LOGPASS2', // 接收内容的Dom节点Id
+      'parent_objId': '#ipt_pwd2', // 将键盘插入到何处的Dom节点Id
+      'placeholderId': '#LOGPASS2_SHOW', // span标签的id，该span用于模拟Input_texId的placeholder
+      'len': '12', // 表示最大允许输入多少个字符[可以不传递]
+      'keyBordLeft': '',
+      'keyBordTop': '',
+      'chaosMode': 0, // 混乱模式,0:无混乱;1:打开时乱一次;2:每输入一个字符乱一次,默认值0
+      'clickStatus': 0, // 按键状态,0:鼠标划过、悬浮时按键无变化;1:鼠标划过、悬浮时按键的颜色变化,默认值0
+      'titlefont': '安全支付输入',
+      'backfont': '退 格',
+      'capsfont': '切换大/小写',
+      'surefont': '确定',
+      'isen': false,
+      'callBack': () => {
+      }, // 密码校验成功回调
+      'errorCallBack': () => {
+      }, // 密码校验失败回调
+      'rsaPublicKey': options.rsa_public_content, // RSA加密必须参数，国密加密可不要
+      'sm2KeyHex': options.sm2_key_hex, // 国密加密必须参数，RSA加密可不要
+      'license': options.license, // 必须参数
+    })
+    passowrd.initOptions()
+    return passowrd
+  }
+
+  new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!'
+    },
+    mounted() {
+      var options = JSON.parse("{\"license\":\"WHBHd1RsdEpBV28reDBVdm9TS0ZnWjFMbldFUjdPTGxYZlVEQS9DRHovcjNGc0gvRHZyeGZ4c05CUFJ5aHhLd2NPbWtoU0dyM3ZVeWdjYkhQZW1pMFBXVmhiZlQ5NHZvc2o2ZTdSQWlxTy9QcGNMVkJ3bGd6Rk4zakVNdzlXRWpJcnU1b1Nxc2UwOWNac2FCV3VoYTVRM00vbEE2R2hlenVOMGRMcEMxYklnPXsiaWQiOjAsInR5cGUiOiJ0ZXN0IiwicGxhdGZvcm0iOjEwLCJub3RiZWZvcmUiOiIyMDIzMDIyNyIsIm5vdGFmdGVyIjoiMjAyMzA4MjcifQ==\",\"oid_partner\":\"2020042200284052\",\"random_key\":\"6f097cf2-8708-4edf-a8b7-87395f90a263\",\"random_value\":\"14201037024888894986282653643020\",\"ret_code\":\"0000\",\"ret_msg\":\"交易成功\",\"sm2_key_hex\":\"36e60187912bd1dc64524dc622fb45920b8d5f2dffd59d11b82801dc80de7f26e4b89ccdcd9e7a722050e1ed5a05574678061f1f13bb905ad31dc6b97f4e8303\",\"user_id\":\"128914732410601\"}");
+
+      let passwordInstance = initPassword(options)
+    },
+  })
+</script>
+</html>

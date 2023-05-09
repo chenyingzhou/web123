@@ -1,7 +1,12 @@
 <template>
   <div class="flex">
     <el-tabs v-model="activeIndex">
-      <el-tab-pane label="企业开户" name="1">
+      <el-tab-pane label="企业用户列表" name="1">
+        <el-table>
+          <el-table-column prop="date" label="日期" width="180"></el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane label="企业开户" name="2">
         <el-form style="width: 50%;" ref="form" :model="form1" label-width="180px">
           <el-form-item label="注册邮箱">
             <el-input v-model="form1.regEmail"></el-input>
@@ -99,11 +104,11 @@
             </el-upload>
           </el-form-item>
           <el-form-item>
-            <el-button :disabled="submitDisabled" type="primary" @click="onSubmit1">提交</el-button>
+            <el-button type="primary" @click="onSubmit1">提交</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="外部代发" name="2">
+      <el-tab-pane label="外部代发" name="3">
         <el-form style="width: 50%;" ref="form" :rules="rules" :model="form2" label-width="180px">
           <el-form-item label="姓名">
             <el-input v-model="form2.bankAcctname"></el-input>
@@ -136,7 +141,7 @@
 </template>
 
 <script>
-import {getPass, accountPay, applyCode, verifyCode, transfer} from "../assets/request";
+import {getPass, accountPay, applyCode, verifyCode, transfer, getList} from "../assets/request";
 import debounce from "lodash/debounce";
 function initPassword(options = {}) {
   // eslint-disable-next-line
@@ -210,6 +215,7 @@ export default {
   },
   mounted() {
     this.handleInput = debounce(this.handleInput, 1000)
+    this.getList()
   },
   methods: {
     handleInput() {
@@ -269,8 +275,6 @@ export default {
         }
       })
     },
-    handleClick() {
-    },
     sendCode() {
       applyCode({
         linkedAcctno: this.form1.linkedAcctno,
@@ -305,6 +309,7 @@ export default {
       this.passwordInstance.setRandKey(this.options.random_value) // 先设置随机key
       this.form1.password = this.passwordInstance.getOutputSM() // 国密加密密码
       this.form1.randomKey = this.options.random_key
+      console.log(this.form1.password, this.form1.randomKey)
       accountPay(this.form1).then((res) => {
         if (res.data.code === 0) {
           this.$message.error('提交成功')
@@ -315,6 +320,16 @@ export default {
     },
     onSubmit2() {
       transfer(this.form2).then((res) => {
+        if (res.data.code === 0) {
+          this.$message.error('提交成功')
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
+    getList() {
+      console.log('获取表格数据')
+      getList({}).then((res) => {
         if (res.data.code === 0) {
           this.$message.error('提交成功')
         } else {

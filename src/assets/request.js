@@ -24,11 +24,16 @@ function transfer(data) {
   return instance.post('pay/transfer', data)
 }
 
+function getList(data) {
+  return instance.post('/pay/acctList', data)
+}
+
 export {
   login,
   getPass,
   accountPay,
   applyCode,
   verifyCode,
-  transfer
+  transfer,
+  getList
 }

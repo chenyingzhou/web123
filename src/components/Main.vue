@@ -212,6 +212,7 @@
           <el-form-item>
             <el-button type="primary" @click="onSubmit3">提交</el-button>
           </el-form-item>
+          <div style="height: 200px"></div>
         </el-form>
       </el-tab-pane>
     </el-tabs>

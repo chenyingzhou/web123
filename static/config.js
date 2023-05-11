@@ -1,2 +1,2 @@
-const baseURL = 'http://pay.aidouhy.com/'
+const baseURL = 'http://pay.aidouhy.com/api/'
 export default baseURL

@@ -1,2 +1,2 @@
-const baseURL = 'http://localhost:8090/'
+const baseURL = 'http://pay.aidouhy.com/'
 export default baseURL

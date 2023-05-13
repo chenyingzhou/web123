@@ -76,26 +76,6 @@
               <el-button style="margin: 0" size="small" type="primary">选择图片上传</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="企业银行帐号">
-            <el-input v-model.trim="form1.linkedAcctno" placeholder="请输入" clearable></el-input>
-          </el-form-item>
-          <el-form-item v-if="showPass" label="密码">
-            <div id="ipt_pwd2" class="ipt_pwd">
-              <span id="LOGPASS2_SHOW">请输入密码</span>
-              <input id="LOGPASS2" class="default input_search el-input__inner" type="password" disabled="disabled" />
-              <div id="keyboardBtn2" class="ipt_pwd_rjp default"></div>
-            </div>
-          </el-form-item>
-          <el-form-item label="绑定手机号">
-            <el-input v-model.trim="form1.regPhone" placeholder="请输入" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="获取验证码">
-            <div class="flex-box">
-              <el-input v-model.trim="code" placeholder="请输入" clearable></el-input>
-              <el-button :disabled="disabled" class="send_btn" @click="sendCode">获取验证码</el-button>
-              <el-button :disabled="verifyBtn" class="send_btn" @click="verifyCode">验证手机号</el-button>
-            </div>
-          </el-form-item>
           <smallTitle title="受益人信息">
             <div class="color-blue">	<i class="el-icon-circle-plus-outline m-l-m"  @click="addDomain()"></i></div>
           </smallTitle>
@@ -155,6 +135,29 @@
               <el-input v-model.trim="domain.idExp" clearable placeholder="yyyyMMdd，如19950510"></el-input>
             </el-form-item>
           </template>
+          <smallTitle title="验证信息">
+            <div class="color-blue"></div>
+          </smallTitle>
+          <el-form-item label="企业银行帐号">
+            <el-input v-model.trim="form1.linkedAcctno" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+          <el-form-item v-if="showPass" label="设置密码">
+            <div id="ipt_pwd2" class="ipt_pwd">
+              <span id="LOGPASS2_SHOW">请输入密码</span>
+              <input id="LOGPASS2" class="default input_search el-input__inner" type="password" disabled="disabled" />
+              <div id="keyboardBtn2" class="ipt_pwd_rjp default"></div>
+            </div>
+          </el-form-item>
+          <el-form-item label="绑定手机号">
+            <el-input v-model.trim="form1.regPhone" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="获取验证码">
+            <div class="flex-box">
+              <el-input v-model.trim="code" placeholder="请输入" clearable></el-input>
+              <el-button :disabled="disabled" class="send_btn" @click="sendCode">获取验证码</el-button>
+              <el-button :disabled="verifyBtn" class="send_btn" @click="verifyCode">验证手机号</el-button>
+            </div>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit1">提交</el-button>
           </el-form-item>

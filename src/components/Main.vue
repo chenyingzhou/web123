@@ -9,11 +9,11 @@
           </el-table-column>
           <el-table-column prop="lianBankAccount" align='center' label="银行卡号">
           </el-table-column>
-          <el-table-column prop="amtBalcur" align='center' label="资金余额" width="180">
+          <el-table-column prop="amtBalcur" align='center' label="资金余额(元)" width="180">
           </el-table-column>
-          <el-table-column prop="amtBalaval" align='center' label="可用余额" width="180">
+          <el-table-column prop="amtBalaval" align='center' label="可用余额(元)" width="180">
           </el-table-column>
-          <el-table-column prop="amtBalfrz" align='center' label="冻结余额" width="180">
+          <el-table-column prop="amtBalfrz" align='center' label="冻结余额(元)" width="180">
           </el-table-column>
         </el-table>
       </el-tab-pane>
@@ -163,11 +163,34 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="外部代发" name="3">
+      <el-tab-pane label="个人开户" name="3">
+        <el-form style="width: 50%;" ref="form" :model="form5" label-width="180px">
+
+          <el-form-item label="用户姓名">
+            <el-input v-model.trim="form5.userName" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="职业">
+            <el-select style="width: 100%" v-model="form5.occupation" placeholder="请选择">
+              <el-option v-for="item in occupationList" :key="item.code" :label="item.name" :value="item.code">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="银行卡号">
+            <el-input v-model.trim="form5.linkedAcctno" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="银行预留手机号">
+            <el-input v-model.trim="form5.linkedPhone" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit4">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="外部代发" name="4">
         <el-form style="width: 50%;" ref="form" :rules="rules" :model="form2" label-width="180px">
           <el-form-item label="付款方">
-            <el-select style="width: 100%" v-model="form2.userId" placeholder="请选择">
-              <el-option v-for="item in tableData" :key="item.userId" :label="item.userName" :value="item.userId">
+            <el-select style="width: 100%" filterable v-model="form2.userId" placeholder="请选择">
+              <el-option v-for="item in cashData" :key="item.userId" :label="item.userName" :value="item.userId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -200,11 +223,11 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="内部代发" name="4">
+      <el-tab-pane label="内部代发" name="5">
         <el-form style="width: 50%;" ref="form" :rules="rules" :model="form3" label-width="180px">
           <el-form-item label="付款方">
-            <el-select style="width: 100%" v-model="form3.userId" placeholder="请选择">
-              <el-option v-for="item in tableData" :key="item.userId" :label="item.userName" :value="item.userId">
+            <el-select style="width: 100%" filterable v-model="form3.userId" placeholder="请选择">
+              <el-option v-for="item in cashData" :key="item.userId" :label="item.userName" :value="item.userId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -216,8 +239,8 @@
             </div>
           </el-form-item>
           <el-form-item label="收款方">
-            <el-select style="width: 100%" v-model="form3.toUserId" placeholder="请选择">
-              <el-option v-for="item in tableData" :key="item.userId" :label="item.userName" :value="item.userId">
+            <el-select style="width: 100%" filterable v-model="form3.toUserId" placeholder="请选择">
+              <el-option v-for="item in cashData" :key="item.userId" :label="item.userName" :value="item.userId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -254,7 +277,9 @@
     transfer,
     getList,
     transferInner,
-    confirm
+    confirm,
+    acctPriApply,
+    occupation
   } from "../assets/request";
   import debounce from "lodash/debounce";
   import smallTitle from "./smallTitle/index.vue";
@@ -297,6 +322,8 @@
     data() {
       return {
         tableData: [],
+        cashData: [],
+        occupationList:[],
         activeIndex: '1',
         form1: {
           uboInfos:[{
@@ -315,6 +342,7 @@
         form2: {},
         form3: {},
         form4: {},
+        form5:{},
         imageUrl: '',
         passwordInstance: '',
         options: '',
@@ -365,8 +393,9 @@
       }
     },
     mounted() {
-      this.handleInputMutpli = debounce(this.handleInputMutpli, 1000)
-      this.getList()
+      // this.handleInputMutpli = debounce(this.handleInputMutpli, 1000)
+      this.getList();
+      this.getOccupationList()
     },
     methods: {
       //下拉选择付款方密码框
@@ -535,6 +564,18 @@
           }
         })
       },
+      //个人开户
+      onSubmit4() {
+        acctPriApply(this.form5).then((res) => {
+          if (res.data.code === 0) {
+              this.form5={};
+              this.$message.success('提交成功')
+              window.open(res.data.data)
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        })
+      },
       //验证码确认
       confirmfn() {
         confirm(this.form4).then((res) => {
@@ -575,6 +616,15 @@
       getList() {
         getList({}).then((res) => {
           this.tableData = res.data.data;
+          this.cashData = res.data.data.filter(item=>{
+            return item.lianBankAccount != '';
+          })
+        })
+      },
+      //职业列表
+      getOccupationList() {
+        occupation({}).then((res) => {
+          this.occupationList = res.data.data;
         })
       }
     }

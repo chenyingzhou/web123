@@ -34,7 +34,12 @@ function confirm(data) {
 function getList(data) {
   return instance.post('/pay/acctList', data)
 }
-
+function acctPriApply(data) {
+  return instance.post('/pay/acctPriApply', data)
+}
+function occupation(data) {
+  return instance.get('/conf/occupation', data)
+}
 export {
   login,
   getPass,
@@ -44,5 +49,7 @@ export {
   transfer,
   transferInner,
   confirm,
-  getList
+  getList,
+  acctPriApply,
+  occupation
 }
